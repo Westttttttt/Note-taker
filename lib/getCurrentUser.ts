@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 
 type DecodedToken = {
    userId: string;
+   iat: number;
+   exp: number;
 };
 
 export const getCurrentUser = async (): Promise<DecodedToken | null> => {
@@ -15,6 +17,7 @@ export const getCurrentUser = async (): Promise<DecodedToken | null> => {
          token,
          process.env.JWT_SECRET
       )) as DecodedToken;
+      //When we decode this it will return a obj containing the the types of DecodedToken which i declare above , the userId is the payload which we used when creating jwt token , and the other 2 extra fields is the default one
 
       return decoded;
    } catch (error) {

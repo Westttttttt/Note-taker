@@ -26,6 +26,7 @@ const userSchema = new Schema<IUser>({
    notes: [
       {
          type: Types.ObjectId,
+         ref: "Note"
       },
    ],
 });

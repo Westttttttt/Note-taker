@@ -2,14 +2,15 @@ import mongoose, { Schema, Types } from "mongoose";
 import { IUser } from "./user.model";
 
 export interface INote extends Document {
-   user: Types.ObjectId | IUser;
+   ownerId: Types.ObjectId | IUser;
    title: string;
    content: string;
 }
 
 const noteSchema = new Schema<INote>({
-   user: {
+   ownerId: {
       type: Types.ObjectId,
+      ref : "User",
       required: true,
    },
    title: {
