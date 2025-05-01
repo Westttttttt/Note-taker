@@ -14,7 +14,10 @@ export async function POST() {
       }
 
       await connectDB();
-      const user = await User.findById(decoded.userId).select("-password");
+      const user = await User.findById(decoded.userId).select("-password").populate({
+         path: "notes",
+         select: "_id title"
+      });
 
       if (!user) {
          return errorResponse({

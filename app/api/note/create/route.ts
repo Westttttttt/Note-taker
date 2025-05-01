@@ -13,7 +13,7 @@ type NoteBodyTypes = {
 
 type DecodedToken = {
    userId: string;
-   iat:number;
+   iat: number;
    exp: number;
 };
 
@@ -55,6 +55,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
       const savedNote: INote = await newNote.save();
 
+      await User.findByIdAndUpdate(
+         user._id,
+         { $push: { notes: savedNote._id } },
+         { new: true }
+      );
+
       return successResponse({
          message: "Note created Successfully",
          status: 201,
@@ -68,4 +74,3 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       });
    }
 }
-

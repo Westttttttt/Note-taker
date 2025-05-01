@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 import { IUser } from "./user.model";
 
 export interface INote extends Document {
@@ -22,6 +22,6 @@ const noteSchema = new Schema<INote>({
    },
 });
 
-const Note = mongoose.models.Note || mongoose.model("Note", noteSchema);
+const Note = mongoose.models.Note || mongoose.model<INote>("Note", noteSchema);
 
 export default Note;

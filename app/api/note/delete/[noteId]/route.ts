@@ -4,12 +4,12 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import Note, { INote } from "@/models/note.model";
 import User, { IUser } from "@/models/user.model";
 import { isValidObjectId, Types } from "mongoose";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
    _: NextRequest,
    { params }: { params: Promise<{ noteId: Types.ObjectId }> }
-) {
+): Promise<NextResponse> {
    try {
       const currUser = await getCurrentUser();
       if (!currUser?.userId) {
@@ -55,7 +55,16 @@ export async function DELETE(
          });
       }
 
-      const deletedNote = await Note.findByIdAndDelete(noteId);
+      const deletedNote: INote | null = await Note.findByIdAndDelete(noteId);
+      if (deletedNote) {
+         await User.findByIdAndUpdate(
+            deletedNote.ownerId,
+            {
+               $pull: { notes: deletedNote._id },
+            },
+            { new: true }
+         );
+      }
 
       return successResponse({
          message: "Note deleted Successfully",
