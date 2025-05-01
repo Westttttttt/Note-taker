@@ -1,4 +1,4 @@
-import { errorResponse, successResponse } from "@/lib/createResponse";
+import { errorResponse, successResponse } from "@/lib/customResponse";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 

@@ -1,6 +1,6 @@
 import { authValidator } from "@/lib/authValidator";
 import { connectDB } from "@/lib/connectDB";
-import { errorResponse, successResponse } from "@/lib/createResponse";
+import { errorResponse, successResponse } from "@/lib/customResponse";
 import { generateTokenAndSetCookie } from "@/lib/generateTokenAndSetCookie";
 import User, { IUser } from "@/models/user.model";
 import bcrypt from "bcryptjs";

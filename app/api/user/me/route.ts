@@ -1,9 +1,10 @@
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import User from "@/models/user.model";
 import { connectDB } from "@/lib/connectDB";
-import { successResponse, errorResponse } from "@/lib/createResponse";
+import { successResponse, errorResponse } from "@/lib/customResponse";
+import "@/models/note.model";
 
-export async function POST() {
+export async function GET() {
    try {
       const decoded: { userId: string } | null = await getCurrentUser();
       if (!decoded) {
@@ -14,10 +15,12 @@ export async function POST() {
       }
 
       await connectDB();
-      const user = await User.findById(decoded.userId).select("-password").populate({
-         path: "notes",
-         select: "_id title"
-      });
+      const user = await User.findById(decoded.userId)
+         .select("-password")
+         .populate({
+            path: "notes",
+            select: "_id title",
+         });
 
       if (!user) {
          return errorResponse({

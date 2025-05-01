@@ -1,5 +1,5 @@
 import { connectDB } from "@/lib/connectDB";
-import { errorResponse, successResponse } from "@/lib/createResponse";
+import { errorResponse, successResponse } from "@/lib/customResponse";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import Note, { INote } from "@/models/note.model";
 import User, { IUser } from "@/models/user.model";
