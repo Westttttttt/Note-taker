@@ -14,6 +14,7 @@ import React, { SetStateAction } from "react";
 import { FormDataTypes } from "./Navbar";
 import { signin, signup } from "@/services/user.services";
 import { toast } from "sonner";
+import { IUser } from "@/models/user.model";
 
 type Props = {
    isDialogOpen: boolean;
@@ -21,6 +22,7 @@ type Props = {
    authType: "Sign up" | "Sign in";
    formData: FormDataTypes;
    setFormData: React.Dispatch<SetStateAction<FormDataTypes>>;
+   setUser: React.Dispatch<SetStateAction<IUser | null>>;
 };
 
 export default function AuthDialog({
@@ -29,6 +31,7 @@ export default function AuthDialog({
    authType,
    formData,
    setFormData,
+   setUser,
 }: Props) {
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setFormData({
@@ -40,27 +43,33 @@ export default function AuthDialog({
    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
 
-      toast.success("Helllo")
-      // if (authType === "Sign up") {
-      //    const res = await signup(formData);
-      //    if (res.success) {
-      //       toast.success(res.message);
-      //    } else {
-      //       toast.error(res.error);
-      //    }
-      // } else {
-      //    const res = await signin(formData);
-      //    if (res.success) {
-      //       toast.success(res.message);
-      //    } else {
-      //       toast.error(res.error);
-      //    }
-      // }
+      if (authType === "Sign up") {
+         const res = await signup(formData);
+         if (res.success) {
+            setIsDialogOpen(false);
+            setFormData({
+               username: "",
+               password: "",
+            });
 
-      // setFormData({
-      //    username: "",
-      //    password: "",
-      // });
+            toast.success(res.message);
+         } else {
+            toast.error(res.error);
+         }
+      } else {
+         const res = await signin(formData);
+         if (res.success) {
+            setIsDialogOpen(false);
+            setUser(res.user);
+            toast.success(res.message);
+            setFormData({
+               username: "",
+               password: "",
+            });
+         } else {
+            toast.error(res.error);
+         }
+      }
    };
 
    return (

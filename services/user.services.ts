@@ -27,10 +27,7 @@ export const signup = async (formData: FormDataTypes) => {
       headers: {
          "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-         username: formData.username,
-         password: formData.password,
-      }),
+      body: JSON.stringify(formData),
    });
 
    const data: ApiSuccess<IUser> | ApiError = await res.json();
@@ -56,10 +53,7 @@ export const signin = async (formData: FormDataTypes) => {
       headers: {
          "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-         username: formData.username,
-         password: formData.password,
-      }),
+      body: JSON.stringify(formData),
    });
 
    const data: ApiSuccess<IUser> | ApiError = await res.json();
@@ -73,6 +67,26 @@ export const signin = async (formData: FormDataTypes) => {
    } else {
       return {
          user: null,
+         success: data.success,
+         error: data.error,
+      };
+   }
+};
+
+export const logout = async () => {
+   const res = await fetch("/api/user/logout", {
+      method: "POST",
+   });
+
+   const data: ApiSuccess<IUser> | ApiError = await res.json();
+
+   if (data.success) {
+      return {
+         success: data.success,
+         message: data.message,
+      };
+   } else {
+      return {
          success: data.success,
          error: data.error,
       };

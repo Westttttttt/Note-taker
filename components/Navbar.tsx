@@ -8,8 +8,9 @@ export type FormDataTypes = {
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { IUser } from "@/models/user.model";
-import { fetchCurrentUser } from "@/services/user.services";
+import { fetchCurrentUser, logout } from "@/services/user.services";
 import AuthDialog from "./AuthDialog";
+import { toast } from "sonner";
 
 const Navbar = () => {
    const [user, setUser] = useState<IUser | null>(null);
@@ -22,6 +23,16 @@ const Navbar = () => {
 
    console.log(user);
 
+   async function handleLogout() {
+      const res = await logout();
+      if (res.success) {
+         toast.success(res.message);
+         setUser(null);
+      } else {
+         toast.error(res.error);
+      }
+   }
+
    useEffect(() => {
       const fetchUser = async () => {
          const res = await fetchCurrentUser();
@@ -31,9 +42,9 @@ const Navbar = () => {
             setUser(null);
          }
       };
-      
+
       fetchUser();
-   }, []);
+   }, [isDialogOpen]);
 
    return (
       <header className="flex justify-between items-center bg-white shadow-sm rounded-lg px-6 py-4 mb-12">
@@ -41,11 +52,17 @@ const Navbar = () => {
             My Notes
          </h1>
          {user && (
-            <div>
+            <div className="flex gap-3 items-center">
                <section>
-                  <img src={user.profilePicture} />
+                  <img
+                     src={user.profilePicture}
+                     className="w-14 h-14 rounded-full border border-gray-400 object-cover"
+                  />
                </section>
-               <Button className="bg-gray-500 text-white hover:bg-gray-600 transition-all duration-200 hover:cursor-pointer">
+               <Button
+                  className="bg-gray-500 text-white hover:bg-gray-600 transition-all duration-200 hover:cursor-pointer"
+                  onClick={handleLogout}
+               >
                   Logout
                </Button>
             </div>
@@ -76,6 +93,7 @@ const Navbar = () => {
                   authType={authType}
                   formData={formData}
                   setFormData={setFormData}
+                  setUser={setUser}
                />
             </div>
          )}
