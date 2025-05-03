@@ -49,3 +49,60 @@ export const addNewNote = async ({
       };
    }
 };
+
+export const deleteNote = async (noteId: string) => {
+   const res = await fetch(`/api/note/delete/${noteId}`, {
+      method: "DELETE",
+   });
+
+   const data: ApiSuccess<INote> | ApiError = await res.json();
+
+   if (data.success) {
+      return {
+         deletedNote: data.data,
+         success: data.success,
+         message: data.message,
+      };
+   } else {
+      return {
+         deleteNote: null,
+         success: data.success,
+         error: data.error,
+      };
+   }
+};
+
+type UpdateFormType = {
+   title: string;
+   content: string;
+};
+
+type UpdateProps = {
+   noteId: string;
+   updateFormData: UpdateFormType;
+};
+
+export const updateNote = async ({ noteId, updateFormData }: UpdateProps) => {
+   const res = await fetch(`/api/note/update/${noteId}`, {
+      method: "PATCH",
+      headers: {
+         "Context-Type": "application/json",
+      },
+      body: JSON.stringify(updateFormData),
+   });
+
+   const data: ApiSuccess<INote> | ApiError = await res.json();
+   if (data.success) {
+      return {
+         deletedNote: data.data,
+         success: data.success,
+         message: data.message,
+      };
+   } else {
+      return {
+         deleteNote: null,
+         success: data.success,
+         error: data.error,
+      };
+   }
+};
