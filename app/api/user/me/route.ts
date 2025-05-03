@@ -17,11 +17,7 @@ export async function GET() {
       await connectDB();
       const user = await User.findById(decoded.userId)
          .select("-password")
-         .populate({
-            path: "notes",
-            select: "_id title",
-         });
-
+         .populate("notes");
       if (!user) {
          return errorResponse({
             error: "User not found",

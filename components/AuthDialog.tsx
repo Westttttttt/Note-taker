@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { SetStateAction } from "react";
+import React, { SetStateAction, useContext } from "react";
 import { FormDataTypes } from "./Navbar";
 import { signin, signup } from "@/services/user.services";
 import { toast } from "sonner";
 import { IUser } from "@/models/user.model";
+import { getCurrentUserNote } from "@/services/note.services";
+import { NoteContext } from "@/context/NoteContext";
 
 type Props = {
    isDialogOpen: boolean;
@@ -33,6 +35,8 @@ export default function AuthDialog({
    setFormData,
    setUser,
 }: Props) {
+   const { setNotes } = useContext(NoteContext)!;
+
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setFormData({
          ...formData,
@@ -66,6 +70,12 @@ export default function AuthDialog({
                username: "",
                password: "",
             });
+            const notes = getCurrentUserNote();
+            if ((await notes).success) {
+               setNotes((await notes).notes);
+            } else {
+               setNotes([]);
+            }
          } else {
             toast.error(res.error);
          }

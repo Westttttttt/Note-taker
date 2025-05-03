@@ -26,6 +26,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
          return errorResponse({ error: isValid.message, status: 400 });
       }
 
+      await connectDB();
       const isAlreadyExists = await User.findOne({ username });
       if (isAlreadyExists) {
          return errorResponse({
@@ -38,8 +39,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const hashedPassword = await bcrypt.hash(password, salt);
 
       const profilePicture = `https://robohash.org/${username}`;
-
-      await connectDB();
 
       const newUser = new User({
          username,

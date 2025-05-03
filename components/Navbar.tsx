@@ -5,12 +5,13 @@ export type FormDataTypes = {
    password: string;
 };
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { IUser } from "@/models/user.model";
 import { fetchCurrentUser, logout } from "@/services/user.services";
 import AuthDialog from "./AuthDialog";
 import { toast } from "sonner";
+import { NoteContext } from "@/context/NoteContext";
 
 const Navbar = () => {
    const [user, setUser] = useState<IUser | null>(null);
@@ -20,6 +21,7 @@ const Navbar = () => {
       username: "",
       password: "",
    });
+   const { setNotes } = useContext(NoteContext)!;
 
    console.log(user);
 
@@ -28,6 +30,7 @@ const Navbar = () => {
       if (res.success) {
          toast.success(res.message);
          setUser(null);
+         setNotes([]);
       } else {
          toast.error(res.error);
       }
@@ -47,7 +50,7 @@ const Navbar = () => {
    }, [isDialogOpen]);
 
    return (
-      <header className="flex justify-between items-center bg-white shadow-sm rounded-lg px-6 py-4 mb-12">
+      <header className="flex justify-between items-center bg-white shadow-sm rounded-lg px-6 py-4 mb-12 h-22">
          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
             My Notes
          </h1>
@@ -56,7 +59,7 @@ const Navbar = () => {
                <section>
                   <img
                      src={user.profilePicture}
-                     className="w-14 h-14 rounded-full border border-gray-400 object-cover"
+                     className="w-12 h-12 rounded-full border border-gray-400 object-cover"
                   />
                </section>
                <Button

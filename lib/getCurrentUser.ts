@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-type DecodedToken = {
+export type DecodedToken = {
    userId: string;
    iat: number;
    exp: number;
